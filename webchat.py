@@ -21,12 +21,16 @@ if "messages" not in st.session_state:
 for message in st.session_state.messages:
     #Dont display system message
     if message["role"] != "system":
-        with st.chat_message(message["role"]):
+        if message["role"] == "user":
+            avatar = "👩🏻‍💻"
+        else:
+            avatar = "🤖"            
+        with st.chat_message(message["role"], avatar=avatar):
             st.write(message["content"])
 
 question = st.chat_input("Ask something...")
 if question:
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar = "👩🏻‍💻"):
         st.write(question)
     st.session_state.messages.append({
         "role":"user",
@@ -35,7 +39,7 @@ if question:
     with st.spinner("Thinking..."):
         response = chat(model= "gemma3:latest",messages=st.session_state.messages)
         answer = response.message.content
-        with st.chat_message("assistant"):
+        with st.chat_message("assistant", avatar="🤖"):
             st.write(answer)
             st.session_state.messages.append(
                 {
